@@ -30,7 +30,6 @@ app.get("/api/notes", function(req, res){
 //api POST requests
 app.post("/api/notes", function(req, res) {
   const newNote = req.body;
-  console.log(newNote);
   //tutorial on appending json files https://stackoverflow.com/questions/36856232/write-add-data-in-json-file-using-node-js
   fs.readFile(__dirname + "/assets/db/db.json", 'utf8', function readFileCallback(err, data){
     if (err){
@@ -39,7 +38,6 @@ app.post("/api/notes", function(req, res) {
     obj = JSON.parse(data); //now it an object
     obj.table.push(newNote); //add some data
     json = JSON.stringify(obj); //convert it back to json
-    console.log(json);
     fs.writeFile(__dirname + "/assets/db/db.json", json, 'utf8', (err) => {
       if (err) throw err;
       console.log('The file has been saved!');
@@ -47,6 +45,26 @@ app.post("/api/notes", function(req, res) {
 }});
 
   res.json(newNote);
+});
+
+app.delete('/api/notes/:note', function (req, res) {
+  const note = req.params.note;
+  fs.readFile(__dirname + "/assets/db/db.json", 'utf8', function readFileCallback(err, data){
+    if (err){
+        console.log(err);
+    } else {
+    obj = JSON.parse(data); //now it an object
+    let filteredObj = obj.table.filter(function(e){
+      return e.id !== note;
+    }); //filter out the note with the same id
+    let newObj = {"table": filteredObj}//create a new object to store the data in the table
+    json = JSON.stringify(newObj); //convert it back to json
+    fs.writeFile(__dirname + "/assets/db/db.json", json, 'utf8', (err) => {
+      if (err) throw err;
+      console.log('The file has been saved!');
+    }); // write it back 
+  }});
+  res.json(note);
 });
 
 
