@@ -1,4 +1,5 @@
-# Note Taker Express
+# Note Taker Express :
+
 This application uses an Express backend to write, save, and delete notes.
 
 ## Overview
